@@ -1,0 +1,319 @@
+[
+    {
+        "id": "cd3ee1cc.97ef5",
+        "type": "subflow",
+        "name": "timeseries2csv",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 120,
+                "y": 100,
+                "wires": [
+                    {
+                        "id": "e71e401b.67a92"
+                    }
+                ]
+            }
+        ],
+        "out": [],
+        "env": [
+            {
+                "name": "PATH",
+                "type": "str",
+                "value": "/data/values.csv",
+                "ui": {
+                    "icon": "font-awesome/fa-folder-open-o",
+                    "label": {
+                        "en-US": "PATH"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "VARS",
+                "type": "json",
+                "value": "[\"Example\"]",
+                "ui": {
+                    "icon": "font-awesome/fa-align-justify",
+                    "label": {
+                        "en-US": "VARS"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "json"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "DATETIME_FORMAT",
+                "type": "str",
+                "value": "2",
+                "ui": {
+                    "icon": "font-awesome/fa-clock-o",
+                    "label": {
+                        "en-US": "TIME FORMAT"
+                    },
+                    "type": "select",
+                    "opts": {
+                        "opts": [
+                            {
+                                "l": {
+                                    "en-US": "Epoch"
+                                },
+                                "v": "1"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "String - \".\""
+                                },
+                                "v": "2"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "String - \",\""
+                                },
+                                "v": "3"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "DELIMITER",
+                "type": "str",
+                "value": ",",
+                "ui": {
+                    "icon": "font-awesome/fa-arrows-h",
+                    "label": {
+                        "en-US": "DELIMITER"
+                    },
+                    "type": "select",
+                    "opts": {
+                        "opts": [
+                            {
+                                "l": {
+                                    "en-US": ","
+                                },
+                                "v": ","
+                            },
+                            {
+                                "l": {
+                                    "en-US": ";"
+                                },
+                                "v": ";"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "DATETIME_NAME",
+                "type": "str",
+                "value": "Time",
+                "ui": {
+                    "icon": "font-awesome/fa-clock-o",
+                    "label": {
+                        "en-US": "TIME NAME"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            }
+        ],
+        "color": "#DDAA99"
+    },
+    {
+        "id": "af039286.cd9a2",
+        "type": "file in",
+        "z": "cd3ee1cc.97ef5",
+        "name": "Read file",
+        "filename": "${PATH}",
+        "format": "utf8",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "x": 460,
+        "y": 280,
+        "wires": [
+            [
+                "601a0fdc.d509d"
+            ]
+        ]
+    },
+    {
+        "id": "601a0fdc.d509d",
+        "type": "function",
+        "z": "cd3ee1cc.97ef5",
+        "name": "Check magnitudes",
+        "func": "lines = msg.payload.split(\"\\n\");\nlength = lines.length;\n\nmagnitudes = env.get(\"VARS\");\nmagnitudes.splice(0, 0, env.get(\"DATETIME_NAME\"));\n\nif (length == 1) {\n    msg.payload = magnitudes;\n    node.error(\"File is empty!\");\n    return msg;\n}\n\nfirst_line = lines[0];\nvars = first_line.split(env.get(\"DELIMITER\"));\n\nok = true\n\nvars.forEach((element, index, array) => {\n    ok = ok & magnitudes.includes(element);\n});\n\nmagnitudes.forEach((element, index, array) => {\n    ok = ok & vars.includes(element);\n});\n\nif (!ok) {\n    node.error(\"File not ok!\");\n    return null;\n}\n\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 280,
+        "wires": [
+            [
+                "7588cb0b.a30014"
+            ]
+        ]
+    },
+    {
+        "id": "157057b5.bdea98",
+        "type": "catch",
+        "z": "cd3ee1cc.97ef5",
+        "name": "File error",
+        "scope": [
+            "af039286.cd9a2"
+        ],
+        "uncaught": false,
+        "x": 460,
+        "y": 380,
+        "wires": [
+            [
+                "beed641e.9e56d8"
+            ]
+        ]
+    },
+    {
+        "id": "344fa283.17310e",
+        "type": "inject",
+        "z": "cd3ee1cc.97ef5",
+        "name": "",
+        "topic": "",
+        "payload": "Started!",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "x": 280,
+        "y": 280,
+        "wires": [
+            [
+                "af039286.cd9a2"
+            ]
+        ]
+    },
+    {
+        "id": "c44b55cb.251578",
+        "type": "file",
+        "z": "cd3ee1cc.97ef5",
+        "name": "Write file",
+        "filename": "${PATH}",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "false",
+        "encoding": "utf8",
+        "x": 1180,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7588cb0b.a30014",
+        "type": "function",
+        "z": "cd3ee1cc.97ef5",
+        "name": "SimplifyArray",
+        "func": "array = msg.payload;\n\nstr = array.join(env.get(\"DELIMITER\"));\n\nif (str === \"\") {\n    node.error(\"String is empty!\");\n    return null;\n}\n\nmsg.payload = str;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 910,
+        "y": 320,
+        "wires": [
+            [
+                "c44b55cb.251578"
+            ]
+        ]
+    },
+    {
+        "id": "beed641e.9e56d8",
+        "type": "function",
+        "z": "cd3ee1cc.97ef5",
+        "name": "Check error",
+        "func": "magnitudes = env.get(\"VARS\")\nmagnitudes.splice(0, 0, env.get(\"DATETIME_NAME\"));\n\nmessage = msg.error.message;\n\nif (message.includes(\"ENOENT\")) {\n    node.warn(\"File did not exist, creating...\");\n    msg.payload = magnitudes;\n    return msg;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 690,
+        "y": 380,
+        "wires": [
+            [
+                "7588cb0b.a30014"
+            ]
+        ]
+    },
+    {
+        "id": "e416a25f.02bb",
+        "type": "function",
+        "z": "cd3ee1cc.97ef5",
+        "name": "Delete non present",
+        "func": "magnitudes = env.get(\"VARS\");\n\nvalues = msg.payload;\n\nmagnitudes.forEach((element, index, array) => {\n    var pos = values.indexOf(element);\n    if (pos !== -1) {\n        values[pos] = \"\";\n    }\n});\n\nmsg.payload = values;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 670,
+        "y": 100,
+        "wires": [
+            [
+                "eaff4a9.998f5b8"
+            ]
+        ]
+    },
+    {
+        "id": "eaff4a9.998f5b8",
+        "type": "function",
+        "z": "cd3ee1cc.97ef5",
+        "name": "SimplifyArray",
+        "func": "array = msg.payload;\n\nstr = array.join(env.get(\"DELIMITER\"));\n\nif (str === \"\") {\n    node.error(\"String is empty!\");\n    return null;\n}\n\nmsg.payload = str;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 910,
+        "y": 100,
+        "wires": [
+            [
+                "c44b55cb.251578"
+            ]
+        ]
+    },
+    {
+        "id": "e71e401b.67a92",
+        "type": "function",
+        "z": "cd3ee1cc.97ef5",
+        "name": "Process info",
+        "func": "magnitudes = env.get(\"VARS\");\nmagnitudes.splice(0, 0, env.get(\"DATETIME_NAME\"));\n\nvalues = magnitudes;\n\ndata = msg.payload;\n\nfor (var magnitude of Object.keys(data)) {\n    var pos = magnitudes.indexOf(magnitude);\n    if (pos !== -1) {\n        values[pos] = data[magnitude];\n    }\n}\n\nmsg.payload = values;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 270,
+        "y": 100,
+        "wires": [
+            [
+                "f5ea2e7d.70418"
+            ]
+        ]
+    },
+    {
+        "id": "f5ea2e7d.70418",
+        "type": "function",
+        "z": "cd3ee1cc.97ef5",
+        "name": "Datetime",
+        "func": "values = msg.payload;\n\n// DATETIME_FORMAT\n// 0: epoch\n// 1: string - \".\"\n// 2: string - \",\"\ndatetime_format = env.get(\"DATETIME_FORMAT\");\n\nif (datetime_format == 1) {\n    datetime_value = Date.now();\n} else if (datetime_format == 2) {\n    d = new Date();\n    datetime_value = (d.getFullYear() + '-' + ('00' + (d.getMonth()+1)).slice(-2) + '-' + ('00' + d.getDate()).slice(-2) + ' ' + ('00' + d.getHours()).slice(-2) + ':' + ('00' + d.getMinutes()).slice(-2) + ':' + ('00' + d.getSeconds()).slice(-2) + '.' + ('000' + d.getMilliseconds()).slice(-3));\n} else if (datetime_format == 3) {\n    d = new Date();\n    datetime_value = (d.getFullYear() + '-' + ('00' + (d.getMonth()+1)).slice(-2) + '-' + ('00' + d.getDate()).slice(-2) + ' ' + ('00' + d.getHours()).slice(-2) + ':' + ('00' + d.getMinutes()).slice(-2) + ':' + ('00' + d.getSeconds()).slice(-2) + ',' + ('000' + d.getMilliseconds()).slice(-3));\n} else {\n    node.error(\"Invalid datetime format\");\n    return null;\n}\n\nvar pos = values.indexOf(env.get(\"DATETIME_NAME\"));\nif (pos !== -1) {\n    values[pos] = datetime_value;\n} else {\n    node.error(\"Datetime column not present\");\n    return null;\n}\n    \nmsg.payload = values;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 460,
+        "y": 100,
+        "wires": [
+            [
+                "e416a25f.02bb"
+            ]
+        ]
+    }
+]

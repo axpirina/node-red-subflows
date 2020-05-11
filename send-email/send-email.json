@@ -1,0 +1,131 @@
+[
+    {
+        "id": "f26bf17e.90955",
+        "type": "subflow",
+        "name": "Email",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 180,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "bbcba1f.5dc2a6"
+                    }
+                ]
+            }
+        ],
+        "out": [],
+        "env": [
+            {
+                "name": "SUBJECT",
+                "type": "str",
+                "value": "Test from Node-RED",
+                "ui": {
+                    "icon": "font-awesome/fa-align-center",
+                    "label": {},
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str",
+                            "num",
+                            "bool",
+                            "json",
+                            "bin",
+                            "env"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "BODY",
+                "type": "str",
+                "value": "This message has been sent from Node-RED",
+                "ui": {
+                    "icon": "font-awesome/fa-align-justify",
+                    "label": {},
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str",
+                            "num",
+                            "bool",
+                            "json",
+                            "bin",
+                            "env"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "TO",
+                "type": "str",
+                "value": "test@mail.com",
+                "ui": {
+                    "icon": "font-awesome/fa-address-book-o",
+                    "label": {},
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str",
+                            "num",
+                            "bool",
+                            "json",
+                            "bin",
+                            "env"
+                        ]
+                    }
+                }
+            }
+        ],
+        "color": "#DDAA99"
+    },
+    {
+        "id": "bbcba1f.5dc2a6",
+        "type": "function",
+        "z": "f26bf17e.90955",
+        "name": "",
+        "func": "msg.topic = env.get(\"SUBJECT\");\nmsg.payload = env.get(\"BODY\");\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 360,
+        "y": 80,
+        "wires": [
+            [
+                "63496af2.e2eef4"
+            ]
+        ]
+    },
+    {
+        "id": "63496af2.e2eef4",
+        "type": "e-mail",
+        "z": "f26bf17e.90955",
+        "server": "localhost",
+        "port": "25",
+        "secure": false,
+        "tls": false,
+        "name": "${TO}",
+        "dname": "Email",
+        "x": 570,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "7e404e17.27f6d",
+        "type": "subflow:f26bf17e.90955",
+        "z": "8217d8eb.6e7c38",
+        "name": "send email",
+        "env": [
+            {
+                "name": "TO",
+                "value": "",
+                "type": "str"
+            }
+        ],
+        "x": 480,
+        "y": 140,
+        "wires": [],
+        "icon": "node-red/envelope.svg"
+    }
+]

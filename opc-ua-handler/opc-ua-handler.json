@@ -1,0 +1,509 @@
+[
+    {
+        "id": "76fd6ad.76e5b94",
+        "type": "subflow",
+        "name": "opcua-handler",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 280,
+                "y": 600,
+                "wires": [
+                    {
+                        "id": "30ce64ed.f5b8bc"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1100,
+                "y": 420,
+                "wires": [
+                    {
+                        "id": "8903f233.a3313",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "SERVER_HOST",
+                "type": "str",
+                "value": "localhost",
+                "ui": {
+                    "icon": "font-awesome/fa-address-card-o",
+                    "label": {
+                        "en-US": "Server Host"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "SERVER_PORT",
+                "type": "num",
+                "value": "4840",
+                "ui": {
+                    "icon": "font-awesome/fa-hashtag",
+                    "label": {
+                        "en-US": "Server Port"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "num"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "SEC_POLICY",
+                "type": "str",
+                "value": "None",
+                "ui": {
+                    "icon": "font-awesome/fa-user-secret",
+                    "label": {
+                        "en-US": "Security Policy"
+                    },
+                    "type": "select",
+                    "opts": {
+                        "opts": [
+                            {
+                                "l": {
+                                    "en-US": "None"
+                                },
+                                "v": "None"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "Basic128"
+                                },
+                                "v": "Basic128"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "Basic128Rsa15"
+                                },
+                                "v": "Basic128Rsa15"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "Basic192"
+                                },
+                                "v": "Basic192"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "Basic192Rsa15"
+                                },
+                                "v": "Basic192Rsa15"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "Basic256"
+                                },
+                                "v": "Basic256"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "Basic256Rsa15"
+                                },
+                                "v": "Basic256Rsa15"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "Basic256Sha256"
+                                },
+                                "v": "Basic256Sha256"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "SEC_MODE",
+                "type": "str",
+                "value": "NONE",
+                "ui": {
+                    "icon": "font-awesome/fa-user-secret",
+                    "label": {
+                        "en-US": "Security Mode"
+                    },
+                    "type": "select",
+                    "opts": {
+                        "opts": [
+                            {
+                                "l": {
+                                    "en-US": "None"
+                                },
+                                "v": "NONE"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "Sign"
+                                },
+                                "v": "SIGN"
+                            },
+                            {
+                                "l": {
+                                    "en-US": "Sign&Encrypt"
+                                },
+                                "v": "SIGNANDENCRYPT"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "PUB_INTERVAL",
+                "type": "num",
+                "value": "1000",
+                "ui": {
+                    "icon": "font-awesome/fa-upload",
+                    "label": {
+                        "en-US": "Publish Interval"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "num"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "REFRESH_INTERVAL",
+                "type": "num",
+                "value": "500",
+                "ui": {
+                    "icon": "font-awesome/fa-refresh",
+                    "label": {
+                        "en-US": "Refresh Interval"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "num"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "NODES",
+                "type": "json",
+                "value": "[{\"name\":\"Example\",\"nodeId\":\"ns=2;s=example\",\"datatypeName\":\"Double\"},{\"name\":\"Example2\",\"nodeId\":\"ns=2;s=example2\",\"datatypeName\":\"Boolean\"}]",
+                "ui": {
+                    "icon": "font-awesome/fa-id-badge",
+                    "label": {
+                        "en-US": "Nodes"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "json"
+                        ]
+                    }
+                }
+            }
+        ],
+        "color": "#DDAA99",
+        "status": {
+            "x": 1200,
+            "y": 160,
+            "wires": [
+                {
+                    "id": "6df70696.4117b8",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "b0110f36.628e5",
+        "type": "status",
+        "z": "76fd6ad.76e5b94",
+        "name": "Listener status",
+        "scope": [
+            "b3400586.2a8978"
+        ],
+        "x": 440,
+        "y": 260,
+        "wires": [
+            [
+                "d32b66bd.a2bfd8"
+            ]
+        ]
+    },
+    {
+        "id": "d32b66bd.a2bfd8",
+        "type": "function",
+        "z": "76fd6ad.76e5b94",
+        "name": "Listener status checker",
+        "func": "status = msg.status;\n\nif (status.text == \"active\") {\n    node.debug(\"Client connected to server\");\n    return [msg, msg];\n} else if (status.text == \"connecting\") {\n    node.debug(\"Client disconnected from server\");\n    return [null, msg];\n} else if (status.text.includes(\"listening\")) {\n    node.debug(\"Server is listening\");\n    return [null, msg];\n} else {\n    node.warn(status.text);\n    return [null, msg];\n}",
+        "outputs": 2,
+        "noerr": 0,
+        "x": 410,
+        "y": 340,
+        "wires": [
+            [
+                "43bec641.c57df8"
+            ],
+            [
+                "56f60f4c.f03ab"
+            ]
+        ]
+    },
+    {
+        "id": "43bec641.c57df8",
+        "type": "function",
+        "z": "76fd6ad.76e5b94",
+        "name": "Inject OPC UA",
+        "func": "var publishInterval = env.get(\"PUB_INTERVAL\") || 1000;\nvar refreshInterval = env.get(\"REFRESH_INTERVAL\") || 1000;\nvar queueSize = Math.ceil(publishInterval/refreshInterval);\nvar items = env.get(\"NODES\") || [];\n\nmsg.topic = \"\";\nmsg.nodetype = \"inject\";\nmsg.injectType = \"listen\";\nmsg.payload = {\n        \"interval\": refreshInterval,\n        \"queueSize\": queueSize,\n        \"options\": {\n            \"requestedPublishingInterval\": publishInterval,\n            \"requestedLifetimeCount\": 60,\n            \"requestedMaxKeepAliveCount\": 10,\n            \"maxNotificationsPerPublish\": 100,\n            \"publishingEnabled\": true,\n            \"priority\": 8\n        }\n};\nmsg.addressSpaceItems = items;\n\nsetTimeout(function(){\n    node.send(msg);\n}, 100);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 440,
+        "y": 420,
+        "wires": [
+            [
+                "cc26a80d.6bcb58",
+                "b3400586.2a8978"
+            ]
+        ]
+    },
+    {
+        "id": "8903f233.a3313",
+        "type": "function",
+        "z": "76fd6ad.76e5b94",
+        "name": "Process info",
+        "func": "// Check if addressSpaceItems exists\nif (!msg.hasOwnProperty(\"addressSpaceItems\")) {\n    node.warn(\"addressSpaceItems does not exist\");\n    return null;\n}\n\nitems = msg.addressSpaceItems;\n\n// Check addressSpaceItems lenght\nif (items.length != 1) {\n    node.warn(\"addressSpaceItems size is not 1\");\n    return null;\n}\n\nitem = items[0];\nnodeId = item.nodeId;\n\nvar nodeId2name = flow.get('nodeId2name') || false;\nif (nodeId2name === false) {\n    name = nodeId;\n} else {\n    name = nodeId2name[nodeId];\n}\n\n// Check the status of justValue\nif (msg[\"justValue\"] === true) {\n    value = msg.payload.value.value\n} else {\n    value = msg.payload.dataValue.value.value;\n}\n\ndata = {}\ndata[name] = value;\n\nmsg = {}\nmsg.payload = data;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 870,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cc26a80d.6bcb58",
+        "type": "function",
+        "z": "76fd6ad.76e5b94",
+        "name": "nodeId2name mapper",
+        "func": "// Check if addressSpaceItems exists\nif (!msg.hasOwnProperty(\"addressSpaceItems\")) {\n    node.warn(\"addressSpaceItems does not exist\");\n    return null;\n}\n\nitems = msg.addressSpaceItems;\n\nnodeId2name = {};\n\nitems.forEach(element => {\n    nodeId = element.nodeId;\n    name = element.name;\n    nodeId2name[nodeId] = name;\n});\n\nflow.set(\"nodeId2name\", nodeId2name);\n\nitems = msg.addressSpaceItems;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 720,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dc98ff80.88d08",
+        "type": "function",
+        "z": "76fd6ad.76e5b94",
+        "name": "Server data",
+        "func": "var host = env.get(\"SERVER_HOST\") || \"localhost\";\nvar port = env.get(\"SERVER_PORT\") || 4840;\nvar secPolicy = env.get(\"SEC_POLICY\") || \"None\";\nvar secMode = env.get(\"SEC_MODE\") || \"NONE\";\n\nvar endpoint = \"opc.tcp://\" + host + \":\" + port;\n\nmsg.payload = {\n    \"discoveryUrl\": null,\n    \"endpoint\": endpoint,\n    \"keepSessionAlive\": true,\n    \"securityPolicy\": secPolicy,\n    \"securityMode\": secMode,\n    \"name\": \"OPC UA Listener Server\",\n    \"showErrors\": true,\n    \"publicCertificateFile\": \"\",\n    \"privateKeyFile\": \"\",\n    \"defaultSecureTokenLifetime\": \"60000\",\n    \"endpointMustExist\": false,\n    \"autoSelectRightEndpoint\": true,\n    \"strategyMaxRetry\": 0,\n    \"strategyInitialDelay\": 0,\n    \"strategyMaxDelay\": 0,\n    \"strategyRandomisationFactor\": 0,\n    \"requestedSessionTimeout\": 0,\n    \"connectionStartDelay\": 0,\n    \"reconnectDelay\": 0\n};\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 450,
+        "y": 80,
+        "wires": [
+            [
+                "1272f6d0.4990e9",
+                "2c785f2b.abb31"
+            ]
+        ]
+    },
+    {
+        "id": "1272f6d0.4990e9",
+        "type": "OPCUA-IIoT-Flex-Connector",
+        "z": "76fd6ad.76e5b94",
+        "name": "",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "connector": "e3d5a6f.6be7058",
+        "x": 700,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f6708a71.3f5808",
+        "type": "inject",
+        "z": "76fd6ad.76e5b94",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "x": 230,
+        "y": 80,
+        "wires": [
+            [
+                "dc98ff80.88d08"
+            ]
+        ]
+    },
+    {
+        "id": "b3400586.2a8978",
+        "type": "OPCUA-IIoT-Listener",
+        "z": "76fd6ad.76e5b94",
+        "connector": "e3d5a6f.6be7058",
+        "action": "subscribe",
+        "queueSize": "1",
+        "name": "",
+        "topic": "",
+        "justValue": true,
+        "useGroupItems": false,
+        "showStatusActivities": false,
+        "showErrors": false,
+        "x": 680,
+        "y": 420,
+        "wires": [
+            [
+                "8903f233.a3313"
+            ]
+        ]
+    },
+    {
+        "id": "873c28cd.b1e778",
+        "type": "status",
+        "z": "76fd6ad.76e5b94",
+        "name": "Server Status",
+        "scope": [
+            "1272f6d0.4990e9"
+        ],
+        "x": 450,
+        "y": 160,
+        "wires": [
+            [
+                "2c785f2b.abb31"
+            ]
+        ]
+    },
+    {
+        "id": "2c785f2b.abb31",
+        "type": "function",
+        "z": "76fd6ad.76e5b94",
+        "name": "Server status checker",
+        "func": "var timer = context.get(\"timer\") || null;\nconst connectionTimeoutMessage = 5000;\n\nif (!msg.hasOwnProperty(\"status\")) {\n    // Inicialization message, timer must be started\n    msg = {};\n    tTimer = setTimeout(function() {\n                node.error(\"Connection to OPC UA Server cannot be stablished, check the configuration parameters\");\n                timer = null;\n                msg.status = {fill:\"red\",shape:\"dot\",text:\"Error (see debug message)\"};\n                node.send(msg);\n            }, connectionTimeoutMessage);\n    context.set(\"timer\", tTimer);\n    msg.status = {fill:\"yellow\",shape:\"dot\",text:\"Connecting...\"};\n    return msg;\n} else {\n    state = msg.status.text;\n    if (state == \"active\") {\n        // Connection done, stop the timer\n        node.debug(\"Connection to server stablished\");\n        if (timer !== null) {\n            clearTimeout(timer);\n            timer = null;\n            context.set(\"timer\", timer);\n        }\n        return msg;\n    }\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 720,
+        "y": 160,
+        "wires": [
+            [
+                "93e2c985.c47208"
+            ]
+        ]
+    },
+    {
+        "id": "6df70696.4117b8",
+        "type": "link in",
+        "z": "76fd6ad.76e5b94",
+        "name": "toStatus",
+        "links": [
+            "56f60f4c.f03ab",
+            "93e2c985.c47208"
+        ],
+        "x": 1115,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "56f60f4c.f03ab",
+        "type": "link out",
+        "z": "76fd6ad.76e5b94",
+        "name": "",
+        "links": [
+            "6df70696.4117b8"
+        ],
+        "x": 635,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "93e2c985.c47208",
+        "type": "link out",
+        "z": "76fd6ad.76e5b94",
+        "name": "",
+        "links": [
+            "6df70696.4117b8"
+        ],
+        "x": 875,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "30ce64ed.f5b8bc",
+        "type": "function",
+        "z": "76fd6ad.76e5b94",
+        "name": "Process write info",
+        "func": "var items = env.get(\"NODES\") || [];\n\npayload = msg.payload;\naddressSpaceItems = []\nvaluesToWrite = []\n\nObject.keys(payload).forEach(function(key) {\n    uaNode = items.filter(node => node.name === key);\n    if (uaNode.length == 1) {\n        addressSpaceItems.push(uaNode[0]);\n        valuesToWrite.push(payload[key]);\n    } else {\n        node.error(\"NodeID not found for: \" + key);\n    }\n})\n\nmsg.topic = \"\"\nmsg.payload = \"\"\nmsg.nodetype = \"inject\"\nmsg.injectType = \"write\"\n\nmsg.addressSpaceItems = addressSpaceItems;\nmsg.valuesToWrite = valuesToWrite;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 430,
+        "y": 600,
+        "wires": [
+            [
+                "dfbbc240.c740d"
+            ]
+        ]
+    },
+    {
+        "id": "dfbbc240.c740d",
+        "type": "OPCUA-IIoT-Write",
+        "z": "76fd6ad.76e5b94",
+        "connector": "e3d5a6f.6be7058",
+        "name": "",
+        "justValue": false,
+        "showStatusActivities": false,
+        "showErrors": true,
+        "x": 670,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e3d5a6f.6be7058",
+        "type": "OPCUA-IIoT-Connector",
+        "z": "",
+        "discoveryUrl": "",
+        "endpoint": "opc.tcp://localhost:55388/",
+        "keepSessionAlive": true,
+        "loginEnabled": false,
+        "securityPolicy": "None",
+        "securityMode": "NONE",
+        "name": "OPC UA Listener Server",
+        "showErrors": false,
+        "individualCerts": false,
+        "publicCertificateFile": "",
+        "privateKeyFile": "",
+        "defaultSecureTokenLifetime": "",
+        "endpointMustExist": false,
+        "autoSelectRightEndpoint": false,
+        "strategyMaxRetry": "",
+        "strategyInitialDelay": "",
+        "strategyMaxDelay": "",
+        "strategyRandomisationFactor": "",
+        "requestedSessionTimeout": "",
+        "connectionStartDelay": "",
+        "reconnectDelay": "",
+        "maxBadSessionRequests": "10"
+    }
+]
