@@ -53,7 +53,7 @@ The payload (msg.payload) is a key-value object, where the 'key' is the name of 
 
 ## Writing values
 
-The subflow allows to write data on a OPC UA node (as long as the node allows it, of couse) and for that, a message following the pattern described in the previous section must be send:
+The subflow allows to write data on a OPC UA node (as long as the node allows it, of course) and for that, a message following the pattern described in the previous section must be send:
 
 ```json
 msg.payload = { "Node ID name": New value}
