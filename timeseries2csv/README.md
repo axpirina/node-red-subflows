@@ -34,7 +34,10 @@ msg.payload = { "<var_name_1>": "<var_value_1>", "<var_name_2">: "<var_value_2>"
 
 It is mandatory for the variables (```<var_name_1>``` and ```<var_name_2>```) to have been previously declared in the [```Vars```](#configuration) parameter of the node configuration.
 However, it is not required to update all the variables at the same time, the message payload can contain a single or many variables.
- 
+
+
+## Flow example
+
 The following image shows a complete flow:
 
 ![Timeseries2CSV Example](../docs/timeseries2csv-example.png "Timeseries2CSV Example")

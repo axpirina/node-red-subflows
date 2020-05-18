@@ -63,6 +63,9 @@ This can be done, for example, using an inject node:
 
 ![OPC UA Handler Write](../docs/opc-ua-handler-write.png "OPC UA Handler Write")
 
+
+## Flow example
+
 The following image shows a complete flow:
 
 ![OPC UA Handler Flow](../docs/opc-ua-handler-flow.png "OPC UA Handler Flow")

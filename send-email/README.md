@@ -25,6 +25,9 @@ The following image shows the configuration parameters of the subflow:
 
 As it can be seen, all the email information is preconfigured, so it can not be dinamically modified with the ```msg.payload``` information. This means that it doesn't matter what type of node is attached to the email node, everytime the flow is executed the email will be sent.
 
+
+## Flow example
+
 The following image shows a complete flow:
 
 ![Send email Example](../docs/send-email-example.png "Send email Example")
