@@ -7,8 +7,8 @@
         "category": "",
         "in": [
             {
-                "x": 280,
-                "y": 640,
+                "x": 80,
+                "y": 900,
                 "wires": [
                     {
                         "id": "4f9107d.87dcef8"
@@ -18,15 +18,15 @@
         ],
         "out": [
             {
-                "x": 1100,
-                "y": 460,
+                "x": 1220,
+                "y": 500,
                 "wires": [
                     {
-                        "id": "f39dd80b.4d8df8",
+                        "id": "6d937f36.e10f5",
                         "port": 0
                     },
                     {
-                        "id": "4c2edad.59d1824",
+                        "id": "3c17ddfa.ff1cd2",
                         "port": 0
                     }
                 ]
@@ -219,165 +219,15 @@
         ],
         "color": "#DDAA99",
         "status": {
-            "x": 960,
-            "y": 200,
+            "x": 840,
+            "y": 1060,
             "wires": [
                 {
-                    "id": "b31fa9a2.222888",
+                    "id": "137b8fde.411a2",
                     "port": 0
                 }
             ]
         }
-    },
-    {
-        "id": "a31bcb70.459ee8",
-        "type": "status",
-        "z": "68d2b36c.055ccc",
-        "name": "Listener status",
-        "scope": [
-            "7bf6018f.bd73f"
-        ],
-        "x": 220,
-        "y": 200,
-        "wires": [
-            [
-                "b31fa9a2.222888"
-            ]
-        ]
-    },
-    {
-        "id": "699880aa.e42f6",
-        "type": "function",
-        "z": "68d2b36c.055ccc",
-        "name": "Inject OPC UA",
-        "func": "var publishInterval = env.get(\"PUB_INTERVAL\") || 1000;\nvar refreshInterval = env.get(\"REFRESH_INTERVAL\") || 1000;\nvar queueSize = Math.ceil(publishInterval/refreshInterval);\nvar items = env.get(\"NODES\") || [];\n\nmsg.topic = \"\";\nmsg.nodetype = \"inject\";\nmsg.injectType = \"listen\";\nmsg.payload = {\n        \"interval\": refreshInterval,\n        \"queueSize\": queueSize,\n        \"options\": {\n            \"requestedPublishingInterval\": publishInterval,\n            \"requestedLifetimeCount\": 60,\n            \"requestedMaxKeepAliveCount\": 10,\n            \"maxNotificationsPerPublish\": 100,\n            \"publishingEnabled\": true,\n            \"priority\": 8\n        }\n};\nmsg.addressSpaceItems = items;\n\nsetTimeout(function(){\n    node.send(msg);\n}, 1000);\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 480,
-        "y": 520,
-        "wires": [
-            [
-                "7bf6018f.bd73f"
-            ]
-        ]
-    },
-    {
-        "id": "f39dd80b.4d8df8",
-        "type": "function",
-        "z": "68d2b36c.055ccc",
-        "name": "Process info",
-        "func": "// Check if addressSpaceItems exists\nif (!msg.hasOwnProperty(\"addressSpaceItems\")) {\n    node.warn(\"addressSpaceItems does not exist\");\n    return null;\n}\n\nitems = msg.addressSpaceItems;\n\n// Check addressSpaceItems lenght\nif (items.length != 1) {\n    node.warn(\"addressSpaceItems size is not 1\");\n    return null;\n}\n\nitem = items[0];\nnodeId = item.nodeId;\n\nvar nodeId2name = flow.get('nodeId2name') || false;\nif (nodeId2name === false) {\n    name = nodeId;\n} else {\n    name = nodeId2name[nodeId];\n}\n\n// Check the status of justValue\nif (msg[\"justValue\"] === true) {\n    value = msg.payload.value.value\n} else {\n    value = msg.payload.dataValue.value.value;\n}\n\ndata = {}\ndata[name] = value;\n\nmsg = {}\nmsg.payload = data;\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 890,
-        "y": 520,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "4a230f1a.50735",
-        "type": "function",
-        "z": "68d2b36c.055ccc",
-        "name": "Server data",
-        "func": "var host = env.get(\"SERVER_HOST\") || \"localhost\";\nvar port = env.get(\"SERVER_PORT\") || 4840;\nvar secPolicy = env.get(\"SEC_POLICY\") || \"None\";\nvar secMode = env.get(\"SEC_MODE\") || \"NONE\";\n\nvar endpoint = \"opc.tcp://\" + host + \":\" + port;\n\nmsg.payload = {\n    \"discoveryUrl\": null,\n    \"endpoint\": endpoint,\n    \"keepSessionAlive\": true,\n    \"securityPolicy\": secPolicy,\n    \"securityMode\": secMode,\n    \"name\": \"OPC UA Listener Server\",\n    \"showErrors\": true,\n    \"publicCertificateFile\": \"\",\n    \"privateKeyFile\": \"\",\n    \"defaultSecureTokenLifetime\": \"60000\",\n    \"endpointMustExist\": false,\n    \"autoSelectRightEndpoint\": true,\n    \"strategyMaxRetry\": 0,\n    \"strategyInitialDelay\": 0,\n    \"strategyMaxDelay\": 0,\n    \"strategyRandomisationFactor\": 0,\n    \"requestedSessionTimeout\": 0,\n    \"connectionStartDelay\": 0,\n    \"reconnectDelay\": 100\n};\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 450,
-        "y": 120,
-        "wires": [
-            [
-                "38e8b090.38163",
-                "b31fa9a2.222888"
-            ]
-        ]
-    },
-    {
-        "id": "38e8b090.38163",
-        "type": "OPCUA-IIoT-Flex-Connector",
-        "z": "68d2b36c.055ccc",
-        "name": "",
-        "showStatusActivities": true,
-        "showErrors": true,
-        "connector": "1a163f76.fe9821",
-        "x": 700,
-        "y": 120,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "84825bed.0f37c8",
-        "type": "inject",
-        "z": "68d2b36c.055ccc",
-        "name": "",
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "repeat": "",
-        "crontab": "",
-        "once": true,
-        "onceDelay": 0.1,
-        "x": 230,
-        "y": 120,
-        "wires": [
-            [
-                "4a230f1a.50735",
-                "d1c12cc6.b7683"
-            ]
-        ]
-    },
-    {
-        "id": "7bf6018f.bd73f",
-        "type": "OPCUA-IIoT-Listener",
-        "z": "68d2b36c.055ccc",
-        "connector": "1a163f76.fe9821",
-        "action": "subscribe",
-        "queueSize": "1",
-        "name": "",
-        "topic": "",
-        "justValue": true,
-        "useGroupItems": false,
-        "showStatusActivities": false,
-        "showErrors": false,
-        "x": 700,
-        "y": 520,
-        "wires": [
-            [
-                "f39dd80b.4d8df8"
-            ]
-        ]
-    },
-    {
-        "id": "18033dcf.d62cd2",
-        "type": "status",
-        "z": "68d2b36c.055ccc",
-        "name": "Connection Status",
-        "scope": [
-            "38e8b090.38163"
-        ],
-        "x": 210,
-        "y": 280,
-        "wires": [
-            [
-                "b31fa9a2.222888",
-                "dfa34138.f2ba2"
-            ]
-        ]
-    },
-    {
-        "id": "b31fa9a2.222888",
-        "type": "function",
-        "z": "68d2b36c.055ccc",
-        "name": "Connection status checker",
-        "func": "var timer = context.get(\"timer\") || null;\nconst connectionTimeoutMessage = 5000;\n\nif (!msg.hasOwnProperty(\"status\")) {\n    // Inicialization message, timer must be started\n    msg = {};\n    tTimer = setTimeout(function() {\n                node.error(\"Connection to OPC UA Server cannot be stablished, check the configuration parameters\");\n                timer = null;\n                msg.status = {fill:\"red\",shape:\"dot\",text:\"Error (see debug message)\"};\n                node.send(msg);\n            }, connectionTimeoutMessage);\n    context.set(\"timer\", tTimer);\n    msg.status = {fill:\"yellow\",shape:\"dot\",text:\"Connecting...\"};\n    return msg;\n} else {\n    state = msg.status.text;\n    if (state == \"active\") {\n        // Connection done, stop the timer\n        node.debug(\"Connection to server stablished\");\n        if (timer !== null) {\n            clearTimeout(timer);\n            timer = null;\n            context.set(\"timer\", timer);\n        }\n        return msg;\n    } else if (state.includes(\"listening\")) {\n        node.debug(\"Server is listening\");\n        return msg;\n    }\n}",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 740,
-        "y": 200,
-        "wires": [
-            []
-        ]
     },
     {
         "id": "4f9107d.87dcef8",
@@ -387,8 +237,10 @@
         "func": "var items = env.get(\"NODES\") || [];\n\npayload = msg.payload;\naddressSpaceItems = []\nvaluesToWrite = []\n\nObject.keys(payload).forEach(function(key) {\n    uaNode = items.filter(node => node.name === key);\n    if (uaNode.length == 1) {\n        addressSpaceItems.push(uaNode[0]);\n        valuesToWrite.push(payload[key]);\n    } else {\n        node.error(\"NodeID not found for: \" + key);\n    }\n})\n\nmsg.topic = \"\"\nmsg.payload = \"\"\nmsg.nodetype = \"inject\"\nmsg.injectType = \"write\"\n\nmsg.addressSpaceItems = addressSpaceItems;\nmsg.valuesToWrite = valuesToWrite;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 470,
-        "y": 640,
+        "initialize": "",
+        "finalize": "",
+        "x": 590,
+        "y": 900,
         "wires": [
             [
                 "8584c468.b44018"
@@ -400,104 +252,562 @@
         "type": "OPCUA-IIoT-Write",
         "z": "68d2b36c.055ccc",
         "connector": "1a163f76.fe9821",
-        "name": "",
+        "name": "Writer",
         "justValue": false,
         "showStatusActivities": false,
         "showErrors": true,
-        "x": 710,
-        "y": 640,
+        "x": 810,
+        "y": 900,
         "wires": [
             []
         ]
     },
     {
-        "id": "cd1468d6.d65418",
+        "id": "e3a88dbd.74df1",
         "type": "OPCUA-IIoT-Read",
         "z": "68d2b36c.055ccc",
-        "attributeId": "0",
+        "attributeId": 0,
         "maxAge": 1,
         "depth": 1,
         "connector": "1a163f76.fe9821",
-        "name": "",
+        "name": "Checker",
         "justValue": true,
-        "showStatusActivities": true,
-        "showErrors": true,
+        "showStatusActivities": false,
+        "showErrors": false,
         "parseStrings": false,
         "historyDays": 1,
         "serverMaxItemsToRead": 1000,
-        "x": 710,
-        "y": 400,
+        "x": 800,
+        "y": 740,
         "wires": [
             [
-                "4c2edad.59d1824"
+                "fdb59769.b4c6f8"
             ]
         ]
     },
     {
-        "id": "7cad69a8.0da228",
+        "id": "c645a5f4.c0d838",
         "type": "function",
         "z": "68d2b36c.055ccc",
-        "name": "Read OPC UA",
-        "func": "var items = env.get(\"NODES\") || [];\n\nmsg = {};\n\nmsg.topic = \"\";\nmsg.nodetype = \"inject\";\nmsg.injectType = \"read\";\nmsg.addressSpaceItems = items;\nmsg.payload = \"\"\n\nsetTimeout(function(){\n    node.send(msg);\n}, 1000);\n\nreturn null;",
+        "name": "Check Data",
+        "func": "currentTimeItem = [\n    { \n        \"name\": \"CurrentTime\", \n        \"nodeId\": \n        \"ns=0;i=2258\" \n    }\n]\n\nmsg = {};\n\nmsg.topic = \"\";\nmsg.nodetype = \"inject\";\nmsg.injectType = \"read\";\nmsg.addressSpaceItems = currentTimeItem;\nmsg.payload = \"\"\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 480,
-        "y": 400,
+        "initialize": "",
+        "finalize": "",
+        "x": 610,
+        "y": 740,
         "wires": [
             [
-                "cd1468d6.d65418"
+                "e3a88dbd.74df1"
             ]
         ]
     },
     {
-        "id": "dfa34138.f2ba2",
-        "type": "function",
+        "id": "765a20a7.f7da3",
+        "type": "status",
         "z": "68d2b36c.055ccc",
-        "name": "Client connected",
-        "func": "status = msg.status;\n\nif (status.text == \"active\") {\n    node.debug(\"Client connected to server\");\n    return msg;\n}",
-        "outputs": 1,
-        "noerr": 0,
-        "x": 470,
-        "y": 280,
+        "name": "Checker Status",
+        "scope": [
+            "e3a88dbd.74df1"
+        ],
+        "x": 140,
+        "y": 740,
         "wires": [
             [
-                "7cad69a8.0da228",
-                "699880aa.e42f6"
+                "470e9dee.db72b4"
             ]
         ]
     },
     {
-        "id": "4c2edad.59d1824",
+        "id": "470e9dee.db72b4",
         "type": "function",
         "z": "68d2b36c.055ccc",
-        "name": "Process read",
-        "func": "var nodeId2name = flow.get('nodeId2name') || false;\n\n// Check if 'injecType' exists\nif (!msg.hasOwnProperty(\"injectType\")) {\n    return null;\n}\n\n// Check if it is a 'read' message\nif (msg.injectType != \"read\") {\n    return null;\n}\n\nif (Array.isArray(msg.payload)) {\n    msg.payload.forEach(variable => {\n        nodeId = variable.nodeId;\n        name = nodeId;\n        if (nodeId2name !== false) {\n            name = nodeId2name[nodeId];\n        }\n        value = variable.value;\n        data = {}\n        data[name] = value;\n        msg = {}\n        msg.payload = data;\n        node.send(msg);\n    });\n}",
+        "name": "Checker connect handler",
+        "func": "const status = msg.status.text;\n\nflow.set(\"checker_active\", status == \"active\");\n\nfunction onTimeout() {\n    flow.set(\"check_error_detected\", true);\n    // Change delay and force reConnect execution\n    flow.set(\"check_delay_ms\", 50);\n    setTimeout(check_command, 0);\n}\n\nfunction check_command() {\n    check_delay_ms = flow.get(\"check_delay_ms\");\n    active = flow.get(\"checker_active\");\n    if (active) {\n        setTimeout(check_command, check_delay_ms);\n        if (!flow.get(\"check_error_detected\")) {\n            check_timeout_ms = flow.get(\"check_timeout_ms\");\n            flow.set(\"check_timer\", setTimeout(onTimeout, check_timeout_ms));\n        }\n        node.send(msg);\n    }\n}\n\n// First execution when the node is connected (active)\nif (flow.get(\"checker_active\")) {\n    flow.set(\"check_delay_ms\", flow.get(\"default_check_delay_ms\"));\n    initial_check_delay_ms = flow.get(\"initial_check_delay_ms\");\n    setTimeout(check_command, initial_check_delay_ms);\n}",
         "outputs": 1,
         "noerr": 0,
-        "x": 890,
-        "y": 400,
+        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\n\nINITIAL_CHECK_DELAY_MS = 500;\nDEFAULT_CHECK_DELAY_MS = 10000;\nCHECK_TIMEOUT_MS = 1500;\n\nflow.set(\"default_check_delay_ms\", DEFAULT_CHECK_DELAY_MS);\nflow.set(\"check_delay_ms\", DEFAULT_CHECK_DELAY_MS);\nflow.set(\"initial_check_delay_ms\", INITIAL_CHECK_DELAY_MS);\nflow.set(\"check_timeout_ms\", CHECK_TIMEOUT_MS);\nflow.set(\"check_error_detected\", false);\nflow.set(\"check_timer\", null);",
+        "finalize": "",
+        "x": 370,
+        "y": 740,
+        "wires": [
+            [
+                "c645a5f4.c0d838"
+            ]
+        ]
+    },
+    {
+        "id": "e62107f.5f08ff8",
+        "type": "comment",
+        "z": "68d2b36c.055ccc",
+        "name": "Periodic checker",
+        "info": "",
+        "x": 140,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "fdb59769.b4c6f8",
+        "type": "function",
+        "z": "68d2b36c.055ccc",
+        "name": "Cancel timer",
+        "func": "timer = flow.get(\"check_timer\");\n\n// Make the error_detected flag false\nflow.set(\"check_error_detected\", false);\n\n// Cancel the timer if it's active\nif (timer !== null) {\n    clearTimeout(timer);\n}",
+        "outputs": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 990,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "da38d3b.3026c3",
+        "type": "OPCUA-IIoT-Listener",
+        "z": "68d2b36c.055ccc",
+        "connector": "1a163f76.fe9821",
+        "action": "subscribe",
+        "queueSize": "1",
+        "name": "",
+        "topic": "",
+        "justValue": true,
+        "useGroupItems": false,
+        "showStatusActivities": false,
+        "showErrors": false,
+        "x": 800,
+        "y": 420,
+        "wires": [
+            [
+                "6d937f36.e10f5"
+            ]
+        ]
+    },
+    {
+        "id": "dcf78378.dc1ad",
+        "type": "function",
+        "z": "68d2b36c.055ccc",
+        "name": "Listener Data",
+        "func": "var publishInterval = env.get(\"PUB_INTERVAL\") || 1000;\nvar refreshInterval = env.get(\"REFRESH_INTERVAL\") || 1000;\nvar queueSize = Math.ceil(publishInterval/refreshInterval);\nvar items = env.get(\"NODES\") || [];\n\nmsg.topic = \"\";\nmsg.nodetype = \"inject\";\nmsg.injectType = \"listen\";\nmsg.payload = {\n        \"interval\": refreshInterval,\n        \"queueSize\": queueSize,\n        \"options\": {\n            \"requestedPublishingInterval\": publishInterval,\n            \"requestedLifetimeCount\": 60,\n            \"requestedMaxKeepAliveCount\": 10,\n            \"maxNotificationsPerPublish\": 100,\n            \"publishingEnabled\": true,\n            \"priority\": 8\n        }\n};\nmsg.addressSpaceItems = items;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 610,
+        "y": 420,
+        "wires": [
+            [
+                "da38d3b.3026c3"
+            ]
+        ]
+    },
+    {
+        "id": "79584d50.9efec4",
+        "type": "status",
+        "z": "68d2b36c.055ccc",
+        "name": "Listener Status",
+        "scope": [
+            "da38d3b.3026c3"
+        ],
+        "x": 140,
+        "y": 420,
+        "wires": [
+            [
+                "74348fa3.c1f1f",
+                "e440fa5d.bce948"
+            ]
+        ]
+    },
+    {
+        "id": "74348fa3.c1f1f",
+        "type": "function",
+        "z": "68d2b36c.055ccc",
+        "name": "Listener connect handler",
+        "func": "const status = msg.status.text;\n\nif (status == \"active\") {\n    const nodes = env.get(\"NODES\") || [];\n    // If any NODE defined, consider listening = false\n    // If NODES empty, consider listening = true\n    flow.set(\"listener_listening\", nodes.length == 0);\n} else if (status.includes(\"listening\")) {\n    flow.set(\"listener_listening\", true);\n}\n\nfunction listen_command() {\n    listening = flow.get(\"listener_listening\");\n    if (!listening) {\n        listener_delay_ms = flow.get(\"listener_delay_ms\");\n        setTimeout(listen_command, listener_delay_ms);\n        node.send(msg);\n    }\n}\n\nif (!flow.get(\"listener_listening\")) {\n    initial_listener_delay_ms = flow.get(\"initial_listener_delay_ms\");\n    setTimeout(listen_command, initial_listener_delay_ms);\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\n\nINITIAL_LISTENER_DELAY_MS = 500;\nDEFAULT_LISTENER_DELAY_MS = 2000;\n\nflow.set(\"listener_listening\", false);\nflow.set(\"listener_delay_ms\", DEFAULT_LISTENER_DELAY_MS);\nflow.set(\"initial_listener_delay_ms\", INITIAL_LISTENER_DELAY_MS);",
+        "finalize": "",
+        "x": 370,
+        "y": 420,
+        "wires": [
+            [
+                "dcf78378.dc1ad"
+            ]
+        ]
+    },
+    {
+        "id": "b59e7b72.2fdfd8",
+        "type": "comment",
+        "z": "68d2b36c.055ccc",
+        "name": "Register and reconnect listeners",
+        "info": "",
+        "x": 190,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "b556f0c.0ef9d1",
+        "type": "OPCUA-IIoT-Flex-Connector",
+        "z": "68d2b36c.055ccc",
+        "name": "Server",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "connector": "1a163f76.fe9821",
+        "x": 810,
+        "y": 260,
         "wires": [
             []
         ]
     },
     {
-        "id": "d1c12cc6.b7683",
+        "id": "20f2ad5a.56f952",
         "type": "function",
         "z": "68d2b36c.055ccc",
-        "name": "nodeId2name mapper",
-        "func": "var items = env.get(\"NODES\") || [];\n\nnodeId2name = {};\n\nitems.forEach(element => {\n    nodeId = element.nodeId;\n    name = element.name;\n    nodeId2name[nodeId] = name;\n});\n\nflow.set(\"nodeId2name\", nodeId2name);\n\nitems = msg.addressSpaceItems;\nreturn msg;",
+        "name": "Server data",
+        "func": "var host = env.get(\"SERVER_HOST\") || \"localhost\";\nvar port = env.get(\"SERVER_PORT\") || 4840;\nvar secPolicy = env.get(\"SEC_POLICY\") || \"None\";\nvar secMode = env.get(\"SEC_MODE\") || \"NONE\";\n\nvar endpoint = \"opc.tcp://\" + host + \":\" + port;\n\nmsg.payload = {\n    \"discoveryUrl\": null,\n    \"endpoint\": endpoint,\n    \"keepSessionAlive\": false,\n    \"name\": \"Docker Server\",\n    \"showErrors\": false,\n    \"publicCertificateFile\": \"\",\n    \"privateKeyFile\": \"\",\n    \"defaultSecureTokenLifetime\": \"60000\",\n    \"endpointMustExist\": false,\n    \"autoSelectRightEndpoint\": true,\n    \"strategyMaxRetry\": 0,\n    \"strategyInitialDelay\": 0,\n    \"strategyMaxDelay\": 0,\n    \"strategyRandomisationFactor\": 0,\n    \"requestedSessionTimeout\": 0,\n    \"connectionStartDelay\": 0,\n    \"reconnectDelay\": 100\n};\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 480,
+        "initialize": "",
+        "finalize": "",
+        "x": 610,
+        "y": 260,
+        "wires": [
+            [
+                "b556f0c.0ef9d1"
+            ]
+        ]
+    },
+    {
+        "id": "68f34f29.f167b",
+        "type": "inject",
+        "z": "68d2b36c.055ccc",
+        "name": "First start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 100,
+        "wires": [
+            [
+                "57a434d.ef2c7cc",
+                "176a31e0.9dc65e"
+            ]
+        ]
+    },
+    {
+        "id": "9b1a3a5e.f02318",
+        "type": "status",
+        "z": "68d2b36c.055ccc",
+        "name": "Server Status",
+        "scope": [
+            "b556f0c.0ef9d1"
+        ],
+        "x": 130,
+        "y": 260,
+        "wires": [
+            [
+                "23fa11a1.023fee",
+                "a3056e23.8b9ae"
+            ]
+        ]
+    },
+    {
+        "id": "23fa11a1.023fee",
+        "type": "function",
+        "z": "68d2b36c.055ccc",
+        "name": "Server connect handler",
+        "func": "const status = msg.status.text;\n\nflow.set(\"server_active\", status == \"active\");\n\nfunction server_command() {\n    active = flow.get(\"server_active\");\n    if (!active) {\n        server_delay_ms = flow.get(\"server_delay_ms\");\n        setTimeout(server_command, server_delay_ms);\n        node.send(msg);\n    }\n}\n\nif (!flow.get(\"server_active\")) {\n    initial_server_delay_ms = flow.get(\"initial_server_delay_ms\");\n    setTimeout(server_command, initial_server_delay_ms);\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\n\nINITIAL_SERVER_DELAY_MS = 500;\nDEFAULT_SERVER_DELAY_MS = 10000;\n\nflow.set(\"server_active\", false);\nflow.set(\"server_delay_ms\", DEFAULT_SERVER_DELAY_MS);\nflow.set(\"initial_server_delay_ms\", INITIAL_SERVER_DELAY_MS);",
+        "finalize": "",
+        "x": 370,
+        "y": 260,
+        "wires": [
+            [
+                "20f2ad5a.56f952"
+            ]
+        ]
+    },
+    {
+        "id": "78115782.6a2ea8",
+        "type": "comment",
+        "z": "68d2b36c.055ccc",
+        "name": "Start and reconnect server",
+        "info": "",
+        "x": 170,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "8faf3290.1ce2f",
+        "type": "comment",
+        "z": "68d2b36c.055ccc",
+        "name": "Writer",
+        "info": "",
+        "x": 110,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "57a434d.ef2c7cc",
+        "type": "function",
+        "z": "68d2b36c.055ccc",
+        "name": "nodeId -> name mapping",
+        "func": "var items = env.get(\"NODES\") || [];\n\nnodeId2name = {};\n\nitems.forEach(element => {\n    nodeId = element.nodeId;\n    const name = element.name;\n    nodeId2name[nodeId] = name;\n});\n\nflow.set(\"nodeId2name\", nodeId2name);\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 370,
+        "y": 100,
+        "wires": [
+            [
+                "20f2ad5a.56f952"
+            ]
+        ]
+    },
+    {
+        "id": "137b8fde.411a2",
+        "type": "function",
+        "z": "68d2b36c.055ccc",
+        "name": "Subflow state",
+        "func": "var subflow_status_timer = context.get(\"subflow_status_timer\");\nconst subflow_status_timeout_ms = context.get(\"subflow_status_timeout_ms\");\n\nif (!msg.hasOwnProperty(\"status\")) {\n    // First execution, timer must be started\n    timer = setTimeout(() =>  {\n            node.warn(\"Connection to OPC UA Server cannot be stablished, check server or configuration parameters\");\n            msg.status = {fill:\"yellow\",shape:\"dot\",text:\"Connecting... (see debug)\"};\n            node.send(msg);\n        }, subflow_status_timeout_ms);\n    context.set(\"subflow_status_timer\", timer);\n    msg = {}\n    msg.status = {fill:\"yellow\", shape:\"dot\", text:\"Connecting...\"};\n    return msg;\n} else {\n    // Real status message\n    const state = msg.status.text;\n    if (state == \"active\") {\n        // Connection done, stop the timer\n        if (subflow_status_timer !== null) {\n            clearTimeout(subflow_status_timer);\n            context.set(\"subflow_status_timer\", null);\n        }\n        return msg;\n    } else if (state.includes(\"listening\")) {\n        return msg;\n    } else {\n        node.warn(\"Server connection was lost, reconnecting...\");\n        msg.status = {fill:\"yellow\",shape:\"dot\",text:\"Reconnecting...\"};\n        return msg;\n    }\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\n\ncontext.set(\"subflow_status_timeout_ms\", 10000);\ncontext.set(\"subflow_status_timer\", null);",
+        "finalize": "",
+        "x": 600,
+        "y": 1060,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a3056e23.8b9ae",
+        "type": "link out",
+        "z": "68d2b36c.055ccc",
+        "name": "Server State",
+        "links": [
+            "187a5abd.f99265"
+        ],
+        "x": 275,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "d5cbe107.80833",
+        "type": "link out",
+        "z": "68d2b36c.055ccc",
+        "name": "Listener State",
+        "links": [
+            "187a5abd.f99265"
+        ],
+        "x": 475,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "187a5abd.f99265",
+        "type": "link in",
+        "z": "68d2b36c.055ccc",
+        "name": "Subflow State",
+        "links": [
+            "176a31e0.9dc65e",
+            "a3056e23.8b9ae",
+            "d5cbe107.80833"
+        ],
+        "x": 75,
+        "y": 1060,
+        "wires": [
+            [
+                "137b8fde.411a2"
+            ]
+        ]
+    },
+    {
+        "id": "6d937f36.e10f5",
+        "type": "function",
+        "z": "68d2b36c.055ccc",
+        "name": "Process listener result",
+        "func": "// Check if subscripton has terminated\nif (msg.payload == \"SUBSCRIPTION TERMINATED\") {\n    return null;\n}\n\n// Check if addressSpaceItems exists\nif (!msg.hasOwnProperty(\"addressSpaceItems\")) {\n    node.warn(\"addressSpaceItems does not exist\");\n    return null;\n}\n\nitems = msg.addressSpaceItems;\n\n// Check addressSpaceItems length\nif (items.length != 1) {\n    return null;\n}\n\nitem = items[0];\nnodeId = item.nodeId;\n\nconst nodeId2name = flow.get('nodeId2name');\nvar name = nodeId;\nif (nodeId2name.hasOwnProperty(nodeId)) {\n    name = nodeId2name[nodeId];\n}\n\n// Check the status of justValue\nif (msg[\"justValue\"] === true) {\n    value = msg.payload.value.value\n} else {\n    value = msg.payload.dataValue.value.value;\n}\n\ndata = {}\ndata[name] = value;\n\nmsg = {}\nmsg.payload = data;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1020,
+        "y": 420,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ac3a506d.69f43",
+        "type": "comment",
+        "z": "68d2b36c.055ccc",
+        "name": "Subflow status",
+        "info": "",
+        "x": 140,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "58ce5d63.054e74",
+        "type": "OPCUA-IIoT-Read",
+        "z": "68d2b36c.055ccc",
+        "attributeId": 0,
+        "maxAge": 1,
+        "depth": 1,
+        "connector": "1a163f76.fe9821",
+        "name": "First Read",
+        "justValue": true,
+        "showStatusActivities": false,
+        "showErrors": false,
+        "parseStrings": false,
+        "historyDays": 1,
+        "serverMaxItemsToRead": 1000,
+        "x": 790,
+        "y": 580,
+        "wires": [
+            [
+                "3c17ddfa.ff1cd2"
+            ]
+        ]
+    },
+    {
+        "id": "9dc18b20.7b6f88",
+        "type": "function",
+        "z": "68d2b36c.055ccc",
+        "name": "First read data",
+        "func": "var items = env.get(\"NODES\") || [];\n\nmsg = {};\n\nmsg.topic = \"\";\nmsg.nodetype = \"inject\";\nmsg.injectType = \"read\";\nmsg.addressSpaceItems = items;\nmsg.payload = \"\"\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 600,
+        "y": 580,
+        "wires": [
+            [
+                "58ce5d63.054e74"
+            ]
+        ]
+    },
+    {
+        "id": "2bb4130e.299acc",
+        "type": "status",
+        "z": "68d2b36c.055ccc",
+        "name": "First Read Status",
+        "scope": [
+            "58ce5d63.054e74"
+        ],
+        "x": 140,
+        "y": 580,
+        "wires": [
+            [
+                "9b7e349a.2d2338"
+            ]
+        ]
+    },
+    {
+        "id": "69749988.9d0b18",
+        "type": "comment",
+        "z": "68d2b36c.055ccc",
+        "name": "First start reader",
+        "info": "",
+        "x": 140,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "9b7e349a.2d2338",
+        "type": "function",
+        "z": "68d2b36c.055ccc",
+        "name": "First read connect handler",
+        "func": "const status = msg.status.text;\n\nflow.set(\"first_read_active\", status == \"active\");\n\n// Execute every time \"first_read\" changes to 'active'\nif (flow.get(\"first_read_active\")) {\n    initial_first_read_delay_ms = flow.get(\"initial_first_read_delay_ms\");\n    setTimeout(function() {\n        node.send(msg);\n    }, initial_first_read_delay_ms);\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is deployed.\n\nINITIAL_FIRST_READ_DELAY_MS = 500;\n\nflow.set(\"first_read_active\", false);\nflow.set(\"initial_first_read_delay_ms\", INITIAL_FIRST_READ_DELAY_MS);",
+        "finalize": "",
+        "x": 370,
+        "y": 580,
+        "wires": [
+            [
+                "9dc18b20.7b6f88"
+            ]
+        ]
+    },
+    {
+        "id": "3c17ddfa.ff1cd2",
+        "type": "function",
+        "z": "68d2b36c.055ccc",
+        "name": "Process first read result",
+        "func": "var nodeId2name = flow.get('nodeId2name');\n\n// Check if 'injecType' exists\nif (!msg.hasOwnProperty(\"injectType\")) {\n    return null;\n}\n\n// Check if it is a 'read' message\nif (msg.injectType != \"read\") {\n    return null;\n}\n\nif (Array.isArray(msg.payload)) {\n    msg.payload.forEach(variable => {\n        nodeId = variable.nodeId;\n        value = variable.value;\n        var name = nodeId;\n        if (nodeId2name.hasOwnProperty(nodeId)) {\n            name = nodeId2name[nodeId];\n        }\n        data = {}\n        data[name] = value;\n        msg = {}\n        msg.payload = data;\n        node.send(msg);\n    });\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 1030,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e19514a1.802db8",
+        "type": "comment",
+        "z": "68d2b36c.055ccc",
+        "name": "Initialization",
+        "info": "",
+        "x": 130,
         "y": 60,
+        "wires": []
+    },
+    {
+        "id": "176a31e0.9dc65e",
+        "type": "link out",
+        "z": "68d2b36c.055ccc",
+        "name": "Initial State",
+        "links": [
+            "187a5abd.f99265"
+        ],
+        "x": 275,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "e440fa5d.bce948",
+        "type": "function",
+        "z": "68d2b36c.055ccc",
+        "name": "Filter non listening",
+        "func": "const state = msg.status.text;\n\nif (state.includes(\"listening\")) {\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 350,
+        "y": 460,
         "wires": [
-            []
+            [
+                "d5cbe107.80833"
+            ]
         ]
     },
     {
         "id": "1a163f76.fe9821",
         "type": "OPCUA-IIoT-Connector",
-        "z": "",
         "discoveryUrl": "",
         "endpoint": "opc.tcp://localhost:55388/",
         "keepSessionAlive": true,
