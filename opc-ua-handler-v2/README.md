@@ -5,6 +5,8 @@
 
 ## Introduction
 
+> Warning: this subflow only works with Node-RED version v2.x and v1.x
+
 > Warning: this subflow depends on the [node-red-contrib-iiot-opcua](https://www.npmjs.com/package/node-red-contrib-iiot-opcua) package and it must be installed first.
 
 This subflow makes reading and writing data from a OPC UA server very easy. 
