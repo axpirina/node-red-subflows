@@ -234,7 +234,7 @@
         "type": "function",
         "z": "68d2b36c.055ccc",
         "name": "Process write info",
-        "func": "var items = env.get(\"NODES\") || [];\n\nvar payload = msg.payload;\nvar addressSpaceItems = []\nvar valuesToWrite = []\n\nObject.keys(payload).forEach(function(key) {\n    var uaNode = items.filter(node => node.name === key);\n    if (uaNode.length == 1) {\n        addressSpaceItems.push(uaNode[0]);\n        valuesToWrite.push(payload[key]);\n    } else {\n        node.error(\"NodeID not found for: \" + key);\n    }\n})\n\nmsg.topic = \"\"\nmsg.payload = \"\"\nmsg.nodetype = \"inject\"\nmsg.injectType = \"write\"\n\nmsg.addressSpaceItems = addressSpaceItems;\nmsg.valuesToWrite = valuesToWrite;\n\nreturn msg;",
+        "func": "var items = env.get(\"NODES\") || [];\n\nvar payload = msg.payload;\nvar addressSpaceItems = [];\nvar valuesToWrite = [];\n\nObject.keys(payload).forEach(function(key) {\n    var uaNode = items.filter(node => node.name === key);\n    if (uaNode.length == 1) {\n        addressSpaceItems.push(uaNode[0]);\n        valuesToWrite.push(payload[key]);\n    } else {\n        node.error(\"NodeID not found for: \" + key);\n    }\n})\n\nmsg.topic = \"\";\nmsg.payload = {};\nmsg.payload.nodetype = \"inject\";\nmsg.payload.injectType =\"write\";\n\nmsg.payload.addressSpaceItems = addressSpaceItems;\nmsg.payload.valuesToWrite = valuesToWrite;\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
