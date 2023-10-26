@@ -5,7 +5,7 @@
 In this repository different Node-RED subflows can be found, to facilitate the accomplishment of basic tasks related to Industry 4.0.
 Each subflow is available in its own folder with detailed instructions.
 
-- [OPC UA Handler](./opc-ua-handler)
+- [OPC UA Handler](./opc-ua-handler-v3)
 - [Send email](./send-email)
 - [Timeseries2CSV](./timeseries2csv)
 
