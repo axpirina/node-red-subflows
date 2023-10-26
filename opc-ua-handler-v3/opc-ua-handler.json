@@ -843,40 +843,5 @@
         "connectionStartDelay": "",
         "reconnectDelay": "",
         "maxBadSessionRequests": "10"
-    },
-    {
-        "id": "f6add37ae3f8c2f7",
-        "type": "subflow:68d2b36c.055ccc",
-        "z": "94416ed76de18542",
-        "name": "",
-        "env": [
-            {
-                "name": "SERVER_HOST",
-                "value": "130.130.130.170",
-                "type": "str"
-            },
-            {
-                "name": "REFRESH_INTERVAL",
-                "value": "100",
-                "type": "num"
-            },
-            {
-                "name": "NODES",
-                "value": "[{\"name\":\"EzkerrekoDetektorea\",\"nodeId\":\"ns=4;s=|var|CODESYS Control for Raspberry Pi SL.Application.GVL.ind_sensor_1\",\"datatypeName\":\"Boolean\"},{\"name\":\"EskubikoDetektorea\",\"nodeId\":\"ns=4;s=|var|CODESYS Control for Raspberry Pi SL.Application.GVL.ind_sensor_2\",\"datatypeName\":\"Boolean\"},{\"name\":\"DistantziaSentsorea\",\"nodeId\":\"ns=4;s=|var|CODESYS Control for Raspberry Pi SL.Application.GVL.analog\",\"datatypeName\":\"Double\"},{\"name\":\"stop\",\"nodeId\":\"ns=4;s=|var|CODESYS Control for Raspberry Pi SL.Application.GVL.stop\",\"datatypeName\":\"Boolean\"},{\"name\":\"start\",\"nodeId\":\"ns=4;s=|var|CODESYS Control for Raspberry Pi SL.Application.GVL.start\",\"datatypeName\":\"Boolean\"},{\"name\":\"larrialdia\",\"nodeId\":\"ns=4;s=|var|CODESYS Control for Raspberry Pi SL.Application.GVL.larrialdia\",\"datatypeName\":\"Boolean\"},{\"name\":\"abiadura\",\"nodeId\":\"ns=4;s=|var|CODESYS Control for Raspberry Pi SL.Application.GVL.abiadura\",\"datatypeName\":\"Double\"},{\"name\":\"zikloa\",\"nodeId\":\"ns=4;s=|var|CODESYS Control for Raspberry Pi SL.Application.GVL.zikloa\",\"datatypeName\":\"Double\"},{\"name\":\"denbora\",\"nodeId\":\"ns=4;s=|var|CODESYS Control for Raspberry Pi SL.Application.GVL.denbora\",\"datatypeName\":\"Double\"}]",
-                "type": "json"
-            }
-        ],
-        "x": 740,
-        "y": 500,
-        "wires": [
-            [
-                "eb4f01599c0fbea0",
-                "7521486a97e12aca",
-                "45ed4f081a236d30",
-                "55028d4b81033045",
-                "878634814fc7cad2",
-                "f8a87629371aa7a9"
-            ]
-        ]
     }
 ]
